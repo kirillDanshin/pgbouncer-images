@@ -1,17 +1,18 @@
-FROM alpine:3.11
+FROM alpine:latest
 ARG VERSION=1.12.0
 
 # Inspiration from https://github.com/gmr/alpine-pgbouncer/blob/master/Dockerfile
 RUN \
   # Download
-  apk --update add autoconf autoconf-doc automake udns udns-dev curl gcc libc-dev \
-  libevent libevent-dev libtool make man openssl-dev pkgconfig postgresql-client && \
+  apk update && \
+  apk --no-cache add make pkgconfig autoconf automake libtool py-docutils git gcc g++ libevent-dev openssl-dev c-ares-dev ca-certificates curl \
+    autoconf-doc udns-dev man-pages && \
   curl -o  /tmp/pgbouncer-$VERSION.tar.gz -L https://pgbouncer.github.io/downloads/files/$VERSION/pgbouncer-$VERSION.tar.gz && \
   cd /tmp && \
   # Unpack, compile
   tar xvfz /tmp/pgbouncer-$VERSION.tar.gz && \
   cd pgbouncer-$VERSION && \
-  ./configure --prefix=/usr --with-udns --disable-warnings-as-errors && \
+  ./configure --prefix=/usr --with-udns && \
   make && \
   # Manual install
   cp pgbouncer /usr/bin && \
@@ -25,7 +26,7 @@ RUN \
   # Cleanup
   cd /tmp && \
   rm -rf /tmp/pgbouncer*  && \
-  apk del --purge autoconf autoconf-doc automake udns-dev curl gcc libc-dev libevent-dev libtool make man libressl-dev pkgconfig
+  apk del --purge autoconf autoconf-doc automake udns-dev curl gcc libc-dev libevent-dev libtool make man-pages libressl-dev pkgconfig
 ADD entrypoint.sh /entrypoint.sh
 USER postgres
 EXPOSE 5432
