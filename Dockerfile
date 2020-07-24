@@ -5,7 +5,9 @@ ARG VERSION=1.12.0
 RUN \
   # Download
   apk update && \
-  apk --no-cache add make pkgconfig autoconf automake libtool py-docutils git gcc g++ libevent-dev openssl-dev c-ares-dev ca-certificates curl \
+  apk --no-cache add make pkgconfig autoconf automake \
+    libtool py-docutils git gcc g++ libevent-dev libevent \
+    openssl-dev c-ares-dev ca-certificates curl \
     autoconf-doc udns-dev man-pages && \
   curl -o  /tmp/pgbouncer-$VERSION.tar.gz -L https://pgbouncer.github.io/downloads/files/$VERSION/pgbouncer-$VERSION.tar.gz && \
   cd /tmp && \
