@@ -1,0 +1,31 @@
+---
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 */3 * * *'
+jobs:
+  check_latest_release:
+    name: Check latest pgbouncer release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch releases
+        run: |
+          #!/bin/bash
+          set -e
+
+          . ./gh-get-releases.sh
+
+          get_all_versions pgbouncer/pgbouncer > matrix.json
+          MESSAGE="Updating build matrix
+            Repo: ${{ github.repository }}
+            Revision: ${{ github.sha }}
+            Workflow: ${{ github.workflow }}
+            Event: ${{ github.event_name }}
+            Actions Url: ${{ format('{0}/actions/runs/{1}', github.event.repository.html_url, github.run_id) }}
+          "
+          if ! git diff-index --quiet HEAD; then
+            git config --global user.name "${{ github.repository }}"
+            git config --global user.name "kirill+pgbouncer@danshin.pro"
+            git commit -m "${MESSAGE}" matrix.json
+            git push origin master
+          fi

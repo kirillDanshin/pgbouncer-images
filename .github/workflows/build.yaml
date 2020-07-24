@@ -1,0 +1,44 @@
+name: Release docker image
+env:
+  REGISTRY: docker.pkg.github.com
+on:
+  release:
+    types: [released]
+
+jobs:
+  prepare_matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    name: Prepare release matrix
+    steps:
+      - uses: actions/checkout@v2
+      - id: set-matrix
+        run: |
+          MATRIX=$(cat matrix.json)
+          echo "::set-output name=matrix::${MATRIX}"
+
+  publish:
+    needs:
+      - prepare_matrix
+    strategy:
+      matrix: ${{fromJson(needs.prepare_matrix.outputs.matrix)}}
+    name: Build and publish docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set repository prefix env
+        run: |
+          LOWER_REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
+          echo "::set-env name=REPO_PREFIX::${LOWER_REPO}"
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+          registry: ${{ env.REGISTRY }}
+          repository: ${{ env.REPO_PREFIX }}
+          cache_froms: ${{ format('{0}/{1}/pgbouncer', env.REGISTRY, env.REPOSITORY) }}
+          tags: ${{ matrix.tag }}
+          build_args: VERSION=${{ matrix.tag }}
+          tag_with_ref: true
+          tag_with_sha: true
