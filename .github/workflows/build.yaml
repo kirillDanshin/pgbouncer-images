@@ -50,8 +50,8 @@ jobs:
         with:
           username: ${{ secrets.QUAY_BOT_NAME }}
           password: ${{ secrets.QUAY_BOT_TOKEN }}
-          registry: quay.io/kirilldanshin/pgbouncer
-          repository: ${{ env.REPO_PREFIX }}/pgbouncer
+          registry: quay.io
+          repository: kirilldanshin/pgbouncer
           cache_froms: ${{ format('{0}/{1}/pgbouncer', env.REGISTRY, env.REPOSITORY) }}
           tags: ${{ matrix.tag }}
           build_args: VERSION=${{ matrix.tag }}
