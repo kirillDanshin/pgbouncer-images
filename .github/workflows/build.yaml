@@ -39,7 +39,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
           registry: ${{ env.REGISTRY }}
-          repository: ${{ env.REPO_PREFIX }}
+          repository: ${{ env.REPO_PREFIX }}/pgbouncer
           cache_froms: ${{ format('{0}/{1}/pgbouncer', env.REGISTRY, env.REPOSITORY) }}
           tags: ${{ matrix.tag }}
           build_args: VERSION=${{ matrix.tag }}
