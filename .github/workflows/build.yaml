@@ -2,8 +2,7 @@ name: Release docker image
 env:
   REGISTRY: docker.pkg.github.com
 on:
-  release:
-    types: [released]
+  push:
 
 jobs:
   prepare_matrix:
