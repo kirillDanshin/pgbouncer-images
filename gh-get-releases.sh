@@ -8,5 +8,5 @@ get_latest_release() {
 
 get_all_versions() {
     curl --silent "https://api.github.com/repos/pgbouncer/pgbouncer/releases" | jq -c '{ "tag": map(. .tag_name) }' \
-        | sed s/_/./g | sed s/pgbouncer.//g | sed 's/\.0"/"/g'
+        | sed s/_/./g | sed s/pgbouncer.//g
 }
