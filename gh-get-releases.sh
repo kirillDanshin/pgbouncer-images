@@ -11,4 +11,4 @@ get_all_versions() {
         | sed s/_/./g | sed s/pgbouncer.//g | sed 's/,"1.11.0","1.10.0","1.9.0"//g'
 }
 
-echo get_all_versions
+echo $(get_all_versions)
