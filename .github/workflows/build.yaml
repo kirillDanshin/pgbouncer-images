@@ -19,7 +19,7 @@ jobs:
       - id: set-matrix
         run: |
           MATRIX=$(cat matrix.json)
-          echo "::set-output name=matrix::${MATRIX}"
+          echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
 
   publish:
     needs:
@@ -33,7 +33,7 @@ jobs:
       - name: Set repository prefix env
         run: |
           LOWER_REPO=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
-          echo "::set-env name=REPO_PREFIX::${LOWER_REPO}"
+          echo "REPO_PREFIX=${LOWER_REPO}" >> $GITHUB_ENV
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
         with:
