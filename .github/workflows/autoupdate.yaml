@@ -16,9 +16,7 @@ jobs:
           #!/bin/bash
           set -e
 
-          . ./gh-get-releases.sh
-
-          get_all_versions pgbouncer/pgbouncer > matrix.json
+          ./gh-get-releases.sh > matrix.json
           MESSAGE="Updating build matrix
             Repo: ${{ github.repository }}
             Revision: ${{ github.sha }}
