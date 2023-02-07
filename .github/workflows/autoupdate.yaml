@@ -1,6 +1,7 @@
 ---
 name: Autoupdate pgbouncer release matrix
 on:
+  push: [ master ]
   schedule:
     - cron:  '0 */3 * * *'
 jobs:
